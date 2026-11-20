@@ -1,168 +1,612 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ArchiTools | Area Calculator</title>
+<meta name="theme-color" content="#171918">
+<meta name="description" content="ArchiTools - Free architectural area calculator and space planning tool.">
+<title>ArchiTools | Architecture Workspace</title>
+
 <style>
+:root {
+  --bg: #171918;
+  --panel: #222522;
+  --panel2: #292c28;
+  --line: #41433b;
+  --bronze: #c49a65;
+  --bronze-light: #dfbd8d;
+  --text: #f2eee6;
+  --muted: #aaa69c;
+  --danger: #c97868;
+}
 * { box-sizing: border-box; }
+
 body {
   margin: 0;
+  background: var(--bg);
+  color: var(--text);
   font-family: Arial, sans-serif;
-  background: #f5f1e9;
-  color: #40372e;
+  line-height: 1.5;
 }
+
 header {
-  background: #493a30;
-  color: #fffaf2;
-  padding: 25px 7%;
+  padding: 26px 6%;
+  background: #20221f;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
 }
-header h1 { margin: 0; letter-spacing: 2px; }
-header p { color: #d9c8b3; }
+
+.brand {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+.brand span { color: var(--bronze); }
+
+.header-tag {
+  color: var(--bronze-light);
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
 main {
-  max-width: 850px;
-  margin: 35px auto;
-  padding: 20px;
+  width: min(1100px, 92%);
+  margin: 38px auto;
 }
-h2 { font-size: 25px; }
-.card {
-  background: #fffdf8;
-  border: 1px solid #e6ddcf;
-  border-radius: 14px;
-  padding: 20px;
+
+.intro { margin-bottom: 30px; }
+.intro small {
+  color: var(--bronze);
+  letter-spacing: 3px;
+  font-size: 11px;
+}
+.intro h1 {
+  font-size: clamp(27px, 5vw, 39px);
+  margin: 8px 0;
+}
+.intro p { color: var(--muted); margin: 0; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.stat, .panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.stat { padding: 20px; }
+.stat small {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.stat strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 27px;
+  color: var(--bronze-light);
+}
+
+.panel { padding: 22px; margin-bottom: 20px; }
+
+.panel-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 20px;
 }
-.row {
+.panel-title h2 {
+  font-size: 18px;
+  margin: 0;
+}
+.panel-title span {
+  color: var(--bronze);
+  font-size: 12px;
+}
+
+.form-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr auto;
-  gap: 10px;
-  margin: 12px 0;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
 }
+
+label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+
 input {
-  min-width: 0;
   width: 100%;
-  padding: 12px;
-  border: 1px solid #d9cbbb;
+  min-width: 0;
+  padding: 13px;
+  background: #171a18;
+  border: 1px solid var(--line);
   border-radius: 7px;
-  background: #fff;
+  color: var(--text);
   font-size: 15px;
+  outline: none;
 }
+
+input:focus {
+  border-color: var(--bronze);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 17px;
+  flex-wrap: wrap;
+}
+
 button {
   border: 0;
+  padding: 12px 18px;
   border-radius: 7px;
-  padding: 12px 17px;
-  background: #725640;
-  color: white;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
 }
-.remove { background: #a65b4b; }
-.total {
-  font-size: 30px;
-  font-weight: bold;
-  color: #725640;
+
+.primary {
+  background: var(--bronze);
+  color: #191a18;
 }
-small { color: #887a6b; }
-@media(max-width:550px) {
-  .row { grid-template-columns: 1fr 1fr; }
-  .row input:first-child { grid-column: span 2; }
-  header { padding: 22px; }
-  main { padding: 14px; }
+.secondary {
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+.danger {
+  background: transparent;
+  border: 1px solid #87594f;
+  color: var(--danger);
+}
+button:active { opacity: .75; }
+
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 510px;
+  font-size: 13px;
+}
+th {
+  text-align: left;
+  padding: 13px 10px;
+  color: var(--bronze-light);
+  font-size: 11px;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--line);
+}
+td {
+  padding: 14px 10px;
+  border-bottom: 1px solid #373a35;
+}
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 30px;
+}
+.room-name { font-weight: 600; }
+.room-actions {
+  display: flex;
+  gap: 7px;
+}
+.room-actions button {
+  padding: 7px 10px;
+  font-size: 11px;
+}
+.percentage { color: var(--bronze-light); }
+
+.progress {
+  height: 7px;
+  background: #41433b;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 7px;
+}
+.progress div {
+  height: 100%;
+  background: var(--bronze);
+  border-radius: 10px;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}
+.summary-line strong { color: var(--text); }
+.summary-line:last-child { border: 0; }
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 25px;
+  font-size: 12px;
+  border-top: 1px solid var(--line);
+}
+footer span { color: var(--bronze); }
+
+@media(max-width:650px) {
+  header { padding: 20px 5%; }
+  .brand { font-size: 21px; }
+  .header-tag { font-size: 9px; }
+  main { margin-top: 27px; }
+  .stats { grid-template-columns: 1fr; gap: 10px; }
+  .stat { padding: 15px; }
+  .stat strong { font-size: 23px; }
+  .form-grid { grid-template-columns: 1fr 1fr; }
+  .field:first-child { grid-column: 1 / -1; }
+  .panel { padding: 16px; }
+}
+
+@media print {
+  body { background: white; color: black; }
+  header, .intro p, .form-panel, .actions,
+  .room-actions, footer, .header-tag { display: none !important; }
+  main { width: 100%; margin: 0; }
+  .panel, .stat {
+    background: white;
+    color: black;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+  .stat strong, .percentage, .summary-line strong,
+  th { color: #333; }
+  td, th, .summary-line { border-color: #ccc; }
+  .progress { background: #ddd; }
+  .progress div { background: #777; }
 }
 </style>
 </head>
+
 <body>
 
 <header>
-  <h1>ARCHITOOLS.</h1>
-  <p>Simple tools for better architecture.</p>
+  <div class="brand">ARCHI<span>TOOLS.</span></div>
+  <div class="header-tag">ARCHITECTURE WORKSPACE</div>
 </header>
 
 <main>
-  <h2>Area Calculator</h2>
-  <p>Calculate and organize your architectural spaces.</p>
 
-  <section class="card">
-    <h3>Space Details</h3>
-    <div id="spaces"></div>
-    <button onclick="addSpace()">+ Add Space</button>
+  <section class="intro">
+    <small>DESIGN • PLAN • CALCULATE</small>
+    <h1>Area Calculator</h1>
+    <p>Professional space planning and area analysis.</p>
   </section>
 
-  <section class="card">
-    <small>TOTAL PROJECT AREA</small>
-    <div class="total" id="total">0.00 m²</div>
-    <p id="count">0 spaces added</p>
+  <section class="stats">
+    <div class="stat">
+      <small>TOTAL PROJECT AREA</small>
+      <strong id="totalArea">0.00 m²</strong>
+    </div>
+    <div class="stat">
+      <small>TOTAL SPACES</small>
+      <strong id="totalSpaces">0</strong>
+    </div>
+    <div class="stat">
+      <small>AVERAGE AREA</small>
+      <strong id="averageArea">0.00 m²</strong>
+    </div>
   </section>
+
+  <section class="panel form-panel">
+    <div class="panel-title">
+      <h2 id="formTitle">Add New Space</h2>
+      <span>SPACE INPUT</span>
+    </div>
+
+    <form id="spaceForm">
+      <div class="form-grid">
+        <div class="field">
+          <label for="spaceName">SPACE NAME</label>
+          <input id="spaceName" type="text"
+            placeholder="e.g. Living Room" required
+            maxlength="60">
+        </div>
+
+        <div class="field">
+          <label for="spaceWidth">WIDTH (M)</label>
+          <input id="spaceWidth" type="number"
+            min="0.01" step="any" placeholder="5" required>
+        </div>
+
+        <div class="field">
+          <label for="spaceLength">LENGTH (M)</label>
+          <input id="spaceLength" type="number"
+            min="0.01" step="any" placeholder="4" required>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" type="submit" id="saveBtn">
+          + Add Space
+        </button>
+        <button class="secondary" type="button"
+          id="cancelBtn" hidden>
+          Cancel Edit
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title">
+      <h2>Room Schedule</h2>
+      <span id="scheduleCount">0 SPACES</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>SPACE</th>
+            <th>AREA (M²)</th>
+            <th>SHARE</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody id="roomTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title">
+      <h2>Area Analysis</h2>
+      <span>PROJECT SUMMARY</span>
+    </div>
+
+    <div class="summary-line">
+      <span>Total project area</span>
+      <strong id="summaryArea">0.00 m²</strong>
+    </div>
+    <div class="summary-line">
+      <span>Number of spaces</span>
+      <strong id="summarySpaces">0</strong>
+    </div>
+    <div class="summary-line">
+      <span>Largest space</span>
+      <strong id="largestSpace">—</strong>
+    </div>
+
+    <div class="actions">
+      <button class="primary" type="button" id="exportBtn">
+        Export / Print PDF
+      </button>
+      <button class="secondary" type="button" id="clearBtn">
+        Clear Project
+      </button>
+    </div>
+  </section>
+
 </main>
 
+<footer>
+  ARCHI<span>TOOLS.</span> — Built for better architecture.
+  <br>Free architectural tools for everyone.
+</footer>
+
 <script>
-let spaces = [];
+const spaces = [];
+let editingIndex = -1;
 
-function addSpace() {
-  spaces.push({
-    name: "",
-    width: 0,
-    length: 0
-  });
-  render();
+const form = document.getElementById("spaceForm");
+const nameInput = document.getElementById("spaceName");
+const widthInput = document.getElementById("spaceWidth");
+const lengthInput = document.getElementById("spaceLength");
+const table = document.getElementById("roomTable");
+
+function area(space) {
+  return space.width * space.length;
 }
 
-function update(index, key, value) {
-  spaces[index][key] = value;
-  calculate();
+function format(value) {
+  return value.toFixed(2);
 }
 
-function removeSpace(index) {
-  spaces.splice(index, 1);
-  render();
+function resetForm() {
+  form.reset();
+  editingIndex = -1;
+  document.getElementById("formTitle").textContent =
+    "Add New Space";
+  document.getElementById("saveBtn").textContent =
+    "+ Add Space";
+  document.getElementById("cancelBtn").hidden = true;
 }
 
-function calculate() {
-  let total = spaces.reduce((sum, space) => {
-    return sum + (Number(space.width) * Number(space.length));
-  }, 0);
-
-  document.getElementById("total").textContent =
-    total.toFixed(2) + " m²";
-
-  document.getElementById("count").textContent =
-    spaces.length + " spaces added";
+function addTextCell(row, text, className) {
+  const cell = document.createElement("td");
+  cell.textContent = text;
+  if (className) cell.className = className;
+  row.appendChild(cell);
+  return cell;
 }
 
 function render() {
-  const container = document.getElementById("spaces");
-  container.innerHTML = "";
+  table.replaceChildren();
 
-  spaces.forEach((space, index) => {
-    const row = document.createElement("div");
-    row.className = "row";
+  const total = spaces.reduce((sum, space) =>
+    sum + area(space), 0);
 
-    row.innerHTML = `
-      <input placeholder="Space name"
-        aria-label="Space name"
-        value="${space.name.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}"
-        oninput="update(${index}, 'name', this.value)">
-      <input type="number" min="0" step="any"
-        placeholder="Width (m)"
-        aria-label="Width in meters"
-        value="${space.width}"
-        oninput="update(${index}, 'width', this.value)">
-      <input type="number" min="0" step="any"
-        placeholder="Length (m)"
-        aria-label="Length in meters"
-        value="${space.length}"
-        oninput="update(${index}, 'length', this.value)">
-      <button class="remove"
-        onclick="removeSpace(${index})">×</button>
-    `;
+  const count = spaces.length;
+  const average = count ? total / count : 0;
 
-    container.appendChild(row);
+  document.getElementById("totalArea").textContent =
+    format(total) + " m²";
+  document.getElementById("totalSpaces").textContent = count;
+  document.getElementById("averageArea").textContent =
+    format(average) + " m²";
+
+  document.getElementById("summaryArea").textContent =
+    format(total) + " m²";
+  document.getElementById("summarySpaces").textContent = count;
+  document.getElementById("scheduleCount").textContent =
+    count + (count === 1 ? " SPACE" : " SPACES");
+
+  let largest = null;
+  spaces.forEach(space => {
+    if (!largest || area(space) > area(largest)) {
+      largest = space;
+    }
   });
 
-  calculate();
+  document.getElementById("largestSpace").textContent =
+    largest ? largest.name + " (" + format(area(largest)) +
+    " m²)" : "—";
+
+  if (!count) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 4;
+    cell.className = "empty";
+    cell.textContent =
+      "No spaces added yet. Start by adding your first space.";
+    row.appendChild(cell);
+    table.appendChild(row);
+    return;
+  }
+
+  spaces.forEach((space, index) => {
+    const row = document.createElement("tr");
+    const value = area(space);
+    const percentage = total ? value / total * 100 : 0;
+
+    addTextCell(row, space.name, "room-name");
+    addTextCell(row, format(value) + " m²");
+
+    const shareCell = addTextCell(
+      row, format(percentage) + "%", "percentage"
+    );
+
+    const progress = document.createElement("div");
+    progress.className = "progress";
+    const bar = document.createElement("div");
+    bar.style.width = percentage + "%";
+    progress.appendChild(bar);
+    shareCell.appendChild(progress);
+
+    const actionCell = document.createElement("td");
+    const actions = document.createElement("div");
+    actions.className = "room-actions";
+
+    const edit = document.createElement("button");
+    edit.type = "button";
+    edit.className = "secondary";
+    edit.textContent = "Edit";
+    edit.addEventListener("click", () => editSpace(index));
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "danger";
+    remove.textContent = "Delete";
+    remove.addEventListener("click", () => deleteSpace(index));
+
+    actions.append(edit, remove);
+    actionCell.appendChild(actions);
+    row.appendChild(actionCell);
+    table.appendChild(row);
+  });
 }
 
-addSpace();
+form.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name = nameInput.value.trim();
+  const width = Number(widthInput.value);
+  const length = Number(lengthInput.value);
+
+  if (!name || !Number.isFinite(width) ||
+      !Number.isFinite(length) || width <= 0 || length <= 0) {
+    alert("Please enter a name and positive dimensions.");
+    return;
+  }
+
+  const space = { name, width, length };
+
+  if (editingIndex >= 0) {
+    spaces[editingIndex] = space;
+  } else {
+    spaces.push(space);
+  }
+
+  resetForm();
+  render();
+});
+
+function editSpace(index) {
+  const space = spaces[index];
+  nameInput.value = space.name;
+  widthInput.value = space.width;
+  lengthInput.value = space.length;
+
+  editingIndex = index;
+  document.getElementById("formTitle").textContent =
+    "Edit Space";
+  document.getElementById("saveBtn").textContent =
+    "Save Changes";
+  document.getElementById("cancelBtn").hidden = false;
+
+  document.querySelector(".form-panel").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+function deleteSpace(index) {
+  if (!confirm("Delete this space?")) return;
+
+  spaces.splice(index, 1);
+
+  if (editingIndex === index) {
+    resetForm();
+  } else if (editingIndex > index) {
+    editingIndex--;
+  }
+
+  render();
+}
+
+document.getElementById("cancelBtn")
+  .addEventListener("click", resetForm);
+
+document.getElementById("clearBtn")
+  .addEventListener("click", () => {
+    if (!spaces.length) return;
+    if (!confirm("Clear all project spaces?")) return;
+    spaces.length = 0;
+    resetForm();
+    render();
+  });
+
+document.getElementById("exportBtn")
+  .addEventListener("click", () => {
+    if (!spaces.length) {
+      alert("Add at least one space before exporting.");
+      return;
+    }
+    window.print();
+  });
+
+render();
 </script>
+
 </body>
 </html>
