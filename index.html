@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArchiTools | Area Calculator</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f1e9;
+  color: #40372e;
+}
+header {
+  background: #493a30;
+  color: #fffaf2;
+  padding: 25px 7%;
+}
+header h1 { margin: 0; letter-spacing: 2px; }
+header p { color: #d9c8b3; }
+main {
+  max-width: 850px;
+  margin: 35px auto;
+  padding: 20px;
+}
+h2 { font-size: 25px; }
+.card {
+  background: #fffdf8;
+  border: 1px solid #e6ddcf;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr auto;
+  gap: 10px;
+  margin: 12px 0;
+}
+input {
+  min-width: 0;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d9cbbb;
+  border-radius: 7px;
+  background: #fff;
+  font-size: 15px;
+}
+button {
+  border: 0;
+  border-radius: 7px;
+  padding: 12px 17px;
+  background: #725640;
+  color: white;
+  cursor: pointer;
+}
+.remove { background: #a65b4b; }
+.total {
+  font-size: 30px;
+  font-weight: bold;
+  color: #725640;
+}
+small { color: #887a6b; }
+@media(max-width:550px) {
+  .row { grid-template-columns: 1fr 1fr; }
+  .row input:first-child { grid-column: span 2; }
+  header { padding: 22px; }
+  main { padding: 14px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ARCHITOOLS.</h1>
+  <p>Simple tools for better architecture.</p>
+</header>
+
+<main>
+  <h2>Area Calculator</h2>
+  <p>Calculate and organize your architectural spaces.</p>
+
+  <section class="card">
+    <h3>Space Details</h3>
+    <div id="spaces"></div>
+    <button onclick="addSpace()">+ Add Space</button>
+  </section>
+
+  <section class="card">
+    <small>TOTAL PROJECT AREA</small>
+    <div class="total" id="total">0.00 m²</div>
+    <p id="count">0 spaces added</p>
+  </section>
+</main>
+
+<script>
+let spaces = [];
+
+function addSpace() {
+  spaces.push({
+    name: "",
+    width: 0,
+    length: 0
+  });
+  render();
+}
+
+function update(index, key, value) {
+  spaces[index][key] = value;
+  calculate();
+}
+
+function removeSpace(index) {
+  spaces.splice(index, 1);
+  render();
+}
+
+function calculate() {
+  let total = spaces.reduce((sum, space) => {
+    return sum + (Number(space.width) * Number(space.length));
+  }, 0);
+
+  document.getElementById("total").textContent =
+    total.toFixed(2) + " m²";
+
+  document.getElementById("count").textContent =
+    spaces.length + " spaces added";
+}
+
+function render() {
+  const container = document.getElementById("spaces");
+  container.innerHTML = "";
+
+  spaces.forEach((space, index) => {
+    const row = document.createElement("div");
+    row.className = "row";
+
+    row.innerHTML = `
+      <input placeholder="Space name"
+        aria-label="Space name"
+        value="${space.name.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}"
+        oninput="update(${index}, 'name', this.value)">
+      <input type="number" min="0" step="any"
+        placeholder="Width (m)"
+        aria-label="Width in meters"
+        value="${space.width}"
+        oninput="update(${index}, 'width', this.value)">
+      <input type="number" min="0" step="any"
+        placeholder="Length (m)"
+        aria-label="Length in meters"
+        value="${space.length}"
+        oninput="update(${index}, 'length', this.value)">
+      <button class="remove"
+        onclick="removeSpace(${index})">×</button>
+    `;
+
+    container.appendChild(row);
+  });
+
+  calculate();
+}
+
+addSpace();
+</script>
+</body>
+</html>
